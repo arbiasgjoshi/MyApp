@@ -1,20 +1,19 @@
 import React from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { View, Text, Image, Button, StyleSheet } from "react-native";
+import { useAuth } from "../context/AuthContext";
 
-type RootStackParamList = {
-  UserDetails: undefined;
-  Products: undefined;
-};
+const UserDetails = () => {
+  const { user, signOut } = useAuth();
 
-type Props = NativeStackScreenProps<RootStackParamList, "UserDetails">;
-
-const UserDetails: React.FC<Props> = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Name" style={styles.input} />
-      <TextInput placeholder="Email" style={styles.input} />
-      <Button title="Next" onPress={() => navigation.navigate("Products")} />
+      <Image source={{ uri: user?.image }} style={styles.avatar} />
+      <Text>Username: {user?.username}</Text>
+      <Text>
+        Name: {user?.firstName} {user?.lastName}
+      </Text>
+      <Text>Email: {user?.email}</Text>
+      <Button title="Logout" onPress={signOut} />
     </View>
   );
 };
@@ -22,12 +21,14 @@ const UserDetails: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  input: {
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
     marginBottom: 20,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
   },
 });
 
