@@ -1,11 +1,10 @@
 import React from "react";
-import { ActivityIndicator, View } from "react-native";
 import { Tabs } from "expo-router";
-import { AuthProvider, useAuth } from "../context/AuthContext";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
-import Login from "./Login"; // Import the Login screen
+import { useAuth } from "../context/AuthContext"; // Adjust the import path if necessary
+import { View, ActivityIndicator } from "react-native";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -14,7 +13,7 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-function TabLayout() {
+export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { user, isLoading } = useAuth();
 
@@ -27,9 +26,9 @@ function TabLayout() {
   }
 
   if (!user) {
-    return <Login />;
+    // If user is not logged in, do nothing since RootNavigation will redirect
+    return null;
   }
-  console.log(user);
 
   return (
     <Tabs
@@ -37,7 +36,7 @@ function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
       }}>
       <Tabs.Screen
-        name="Products"
+        name="products"
         options={{
           title: "Products",
           tabBarIcon: ({ color }) => (
@@ -46,34 +45,19 @@ function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Recipes"
+        name="recipes"
         options={{
           title: "Recipes",
           tabBarIcon: ({ color }) => <TabBarIcon name="cogs" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="Settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => <TabBarIcon name="cogs" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="UserDetails"
+        name="userDetails"
         options={{
           title: "User Details",
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
         }}
       />
     </Tabs>
-  );
-}
-
-export default function RootLayout() {
-  return (
-    <AuthProvider>
-      <TabLayout />
-    </AuthProvider>
   );
 }
